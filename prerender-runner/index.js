@@ -54,7 +54,6 @@ async function prerender(id, targetUrl) {
   const location = getLocation(targetUrl);
 
   const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`, { maxBuffer: 1024 * 5000 });
-  console.log('targetURL: ' + targetUrl);
   const cleaned = stdout.replaceAll('href=\"/', `href="${location.protocol}//${location.host}/`);
   updateHdb(id, cleaned);
 
@@ -92,12 +91,16 @@ function crawlAllUrls(url) {
                           href = href.trim();
                           obselete.push(href);
 
-                          const targetUrl = href.split('?')[0];
+                          let targetUrl = href.split('?')[0];
+                          if (targetUrl.startsWith('/')) {
+                            targetUrl = `${url}${targetUrl}`
+                          }
+                          targetUrl = targetUrl.split('?')[0];
                           const id = generateHashKey(targetUrl);
                           prerender(id, targetUrl);
 
                           setTimeout(function() {
-                              href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`https://${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
+                              crawlAllUrls(targetUrl);
                           }, 5000)
 
                       }
