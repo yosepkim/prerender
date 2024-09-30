@@ -101,7 +101,6 @@ function crawlAllUrls(url) {
                           if (targetUrl.startsWith('/')) {
                             targetUrl = `${url}${targetUrl}`
                           }
-                          targetUrl = targetUrl.split('?')[0];
                           const id = generateHashKey(targetUrl);
                           prerender(id, targetUrl);
 
