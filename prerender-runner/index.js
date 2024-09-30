@@ -29,7 +29,7 @@ function getLocation(href) {
 }
 
 function updateHdb(id, content) {
-  const hdUrl = `https://chicago-edgecloud9.harperdbcloud.com/prerender/save`;
+  const hdUrl = `https://miami-edgecloud9.harperdbcloud.com/prerender/save`;
   const token = 'eWtpbTokSWxvdmVKZXN1czEyMyE=';
   const data = {
     id: id,
@@ -54,7 +54,7 @@ async function prerender(id, targetUrl) {
   const cleaned = stdout.replaceAll('href="/', `href="${location.protocol}://${location.host}/`)
   updateHdb(id, cleaned);
 
-  return stdout;
+  return cleaned;
 }
 
 const targetUrls = [
