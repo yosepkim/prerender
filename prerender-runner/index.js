@@ -51,7 +51,9 @@ function updateHdb(id, content, url) {
   });
 }
 
-async function prerender(id, targetUrl) {
+async function prerender(url) {
+  const targetUrl = url.replace(/\/$/, "");
+  const id = generateHashKey(targetUrl);
   const location = getLocation(targetUrl);
 
   const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`, { maxBuffer: 1024 * 5000 });
@@ -94,8 +96,8 @@ function crawlAllUrls(url) {
                           if (targetUrl.startsWith('/')) {
                             targetUrl = `${url}${targetUrl}`
                           }
-                          const id = generateHashKey(targetUrl);
-                          prerender(id, targetUrl);
+        
+                          prerender(targetUrl);
 
                           setTimeout(function() {
                               crawlAllUrls(targetUrl);

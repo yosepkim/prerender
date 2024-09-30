@@ -32,14 +32,12 @@ const getAll = async (server, { hdbCore, logger }) => {
   });
 
   server.route({
-    url: '/view/*',
+    url: '/view',
     method: 'GET',
     handler: async (request, reply) => {
       try {
-        const host = request.query.host;
-        const path = request.url.replace('/prerender/view/', '').split('?')[0];
-        const url = `https://${host}/${path}`;
-        const hashKey = generateHashKey(url);
+        const targetUrl = request.query.targetUrl;
+        const hashKey = generateHashKey(targetUrl);
         const selectQuery = {
           body: {
             operation: 'search_by_id',
