@@ -36,12 +36,17 @@ const getAll = async (server, { hdbCore, logger }) => {
     method: 'GET',
     handler: async (request, reply) => {
       try {
-        const url = request.url.replace('/prerender/view/', '');
+        const host = request.query.host;
+        const path = request.url.replace('/prerender/view/', '').split('?')[0];
+        const url = `https://${host}/${path}`;
         const hashKey = generateHashKey(url);
         const selectQuery = {
           body: {
-            operation: 'sql',
-            sql: `SELECT * FROM prerender.page WHERE id = ${hashKey}`
+            operation: 'search_by_id',
+            database: 'prerender',
+            table: 'page',
+            ids: [hashKey],
+            get_attributes: ['content']
           }
         };
         const records = await hdbCore.requestWithoutAuthentication(selectQuery);
