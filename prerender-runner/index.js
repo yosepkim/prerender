@@ -47,7 +47,8 @@ const targetUrls = [
   "https://www.kohls.com/product/prd-6458833/mens-under-armour-10-ua-zone-basketball-shorts.jsp",
   "https://www.brooksrunning.com/en_us",
   "https://www.brooksrunning.com/en_us/mens/apparel/shorts/",
-  "https://www.brooksrunning.com/en_us/mens/apparel/bottoms/sherpa-7%22-2-in-1-short/211333.html"
+  "https://www.brooksrunning.com/en_us/mens/apparel/bottoms/sherpa-7%22-2-in-1-short/211333.html",
+  "https://www.edgecloud9.com"
 ];
 
 for (const url of targetUrls) {
