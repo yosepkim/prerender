@@ -16,8 +16,8 @@ const getAll = async (server, { hdbCore, logger }) => {
     url: '/save',
     method: 'POST',
     handler: async (request) => {
-      
-      const insertQuery = { 
+
+      const insertQuery = {
         body: {
           operation: "upsert",
           schema: "prerender",
@@ -25,9 +25,9 @@ const getAll = async (server, { hdbCore, logger }) => {
           records: [request.body]
         }
       };
-      
+
       return await hdbCore.requestWithoutAuthentication(insertQuery);
-    
+
     }
   });
 
@@ -36,33 +36,32 @@ const getAll = async (server, { hdbCore, logger }) => {
     method: 'GET',
     handler: async (request, reply) => {
       try {
-        const path = request.url.replace('/prerender/view/', '');
-        const hashKey = generateHashKey(path);
-        const selectQuery = { 
-            body: {
-              operation: 'sql',
-               sql: `SELECT * FROM prerender.page WHERE id = ${hashKey}`
-            }
-          };
+        const url = request.url.replace('/prerender/view/', '');
+        const hashKey = generateHashKey(url);
+        const selectQuery = {
+          body: {
+            operation: 'sql',
+            sql: `SELECT * FROM prerender.page WHERE id = ${hashKey}`
+          }
+        };
         const records = await hdbCore.requestWithoutAuthentication(selectQuery);
         if (records.length > 0) {
           reply
-          .code(200)
-          .type('text/html')
-          .send(records[0].content)
+            .code(200)
+            .type('text/html')
+            .send(records[0].content)
         } else {
-          const response = await fetch(`https://www.kohls.com/${path}`, {
-              method: 'GET',
-              headers: {
-                ...request.headers,
-              }
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              ...request.headers,
             }
-          );
+          });
           const payload = await response.text();
           reply
-          .code(200)
-          .type('text/html')
-          .send(payload)
+            .code(200)
+            .type('text/html')
+            .send(payload)
         }
       } catch (exception) {
         reply
