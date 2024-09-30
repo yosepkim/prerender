@@ -14,6 +14,20 @@ function generateHashKey(stringInput) {
   return hash;
 }
 
+function getLocation(href) {
+  var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+  return match && {
+      href: href,
+      protocol: match[1],
+      host: match[2],
+      hostname: match[3],
+      port: match[4],
+      pathname: match[5],
+      search: match[6],
+      hash: match[7]
+  }
+}
+
 function updateHdb(id, content) {
   const hdUrl = `https://chicago-edgecloud9.harperdbcloud.com/prerender/save`;
   const token = 'eWtpbTokSWxvdmVKZXN1czEyMyE=';
@@ -34,8 +48,10 @@ function updateHdb(id, content) {
 }
 
 async function prerender(id, targetUrl) {
+  const location = getLocation(targetUrl);
+  
   const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`);
-
+  const cleaned = stdout.replaceAll('href="/', `href="${location.protocol}://${location.host}/`)
   updateHdb(id, stdout);
 
   return stdout;
