@@ -52,7 +52,7 @@ function updateHdb(id, content, url) {
 }
 
 async function prerender(url) {
-  const targetUrl = url.replace(/\/$/, "");
+  const targetUrl = url.replace(/\/?$/, '/');
   const id = generateHashKey(targetUrl);
   const location = getLocation(targetUrl);
 
