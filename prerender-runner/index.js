@@ -31,12 +31,13 @@ function getLocation(href) {
   }
 }
 
-function updateHdb(id, content) {
+function updateHdb(id, content, url) {
   const hdUrl = `https://miami-edgecloud9.harperdbcloud.com/prerender/save`;
   const token = 'eWtpbTokSWxvdmVKZXN1czEyMyE=';
   const data = {
     id: id,
-    content: content
+    content: content,
+    url: 
   };
 
   request({
@@ -55,20 +56,10 @@ async function prerender(id, targetUrl) {
 
   const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`, { maxBuffer: 1024 * 5000 });
   const cleaned = stdout.replaceAll('href=\"/', `href="${location.protocol}//${location.host}/`);
-  updateHdb(id, cleaned);
+  updateHdb(id, cleaned, targetUrl);
 
   return cleaned;
 }
-
-// const targetUrls = [
-//   "https://www.kohls.com/product/prd-3671767/mens-under-armour-sportstyle-tee.jsp",
-//   "https://www.kohls.com/product/prd-6471433/mens-under-armour-foundation-short-sleeve-tee.jsp",
-//   "https://www.kohls.com/product/prd-6458833/mens-under-armour-10-ua-zone-basketball-shorts.jsp",
-//   "https://www.brooksrunning.com/en_us",
-//   "https://www.brooksrunning.com/en_us/mens/apparel/shorts/",
-//   "https://www.brooksrunning.com/en_us/mens/apparel/bottoms/sherpa-7%22-2-in-1-short/211333.html",
-//   "https://www.edgecloud9.com"
-// ];
 
 function isSameHost(originHost, url) {
   const location = getLocation(originHost);
