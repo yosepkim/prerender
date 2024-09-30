@@ -37,7 +37,7 @@ function updateHdb(id, content, url) {
   const data = {
     id: id,
     content: content,
-    url: 
+    url: url
   };
 
   request({
