@@ -52,7 +52,7 @@ async function prerender(id, targetUrl) {
   
   const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`);
   const cleaned = stdout.replaceAll('href="/', `href="${location.protocol}://${location.host}/`)
-  updateHdb(id, stdout);
+  updateHdb(id, cleaned);
 
   return stdout;
 }
