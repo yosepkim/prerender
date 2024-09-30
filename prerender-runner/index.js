@@ -71,7 +71,7 @@ async function prerender(id, targetUrl) {
 // ];
 
 function isSameHost(originHost, url) {
-  const location = getLocation(targetUrl);
+  const location = getLocation(originHost);
   if ((location && url.startsWith('http') && url.includes(location.hostname)) || url.startsWith('/')) {
     return true;
   }
