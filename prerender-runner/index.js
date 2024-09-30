@@ -54,6 +54,7 @@ async function prerender(id, targetUrl) {
   const location = getLocation(targetUrl);
 
   const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`, { maxBuffer: 1024 * 5000 });
+  console.log('targetURL: ' + targetUrl);
   const cleaned = stdout.replaceAll('href=\"/', `href="${location.protocol}//${location.host}/`);
   updateHdb(id, cleaned);
 
