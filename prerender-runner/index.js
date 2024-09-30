@@ -93,7 +93,7 @@ function crawlAllUrls(url) {
               Object.keys(urls).forEach((item) => {
                   if (urls[item].type === 'tag') {
                       let href = urls[item].attribs.href;
-                      if (href && !obselete.includes(href) && !isSameHost(url, href)) {
+                      if (href && !obselete.includes(href) && isSameHost(url, href)) {
                           href = href.trim();
                           obselete.push(href);
 
