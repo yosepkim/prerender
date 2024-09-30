@@ -101,7 +101,7 @@ function crawlAllUrls(url) {
 
                           setTimeout(function() {
                               crawlAllUrls(targetUrl);
-                          }, 5000)
+                          }, 10000)
 
                       }
                   }
