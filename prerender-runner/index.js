@@ -70,6 +70,12 @@ async function prerender(id, targetUrl) {
 //   "https://www.edgecloud9.com"
 // ];
 
+function isSameHost(originHost, url) {
+  if (url.startsWith('http') && url.contains(originHost)) {
+    return true;
+  }
+  return false;
+}
 
 let obselete = [];
 
@@ -87,7 +93,7 @@ function crawlAllUrls(url) {
               Object.keys(urls).forEach((item) => {
                   if (urls[item].type === 'tag') {
                       let href = urls[item].attribs.href;
-                      if (href && !obselete.includes(href)) {
+                      if (href && !obselete.includes(href) && !isSameHost(url, href)) {
                           href = href.trim();
                           obselete.push(href);
 
