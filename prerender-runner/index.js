@@ -116,9 +116,4 @@ function crawlAllUrls(url) {
   })
 }
 
-crawlAllUrls("http://www.edgecloud9.com");
-
-// for (const url of targetUrls) {
-//   const id = generateHashKey(url);
-//   const content = prerender(id, url);
-// }
+crawlAllUrls("https://www.kohls.com/feature/sitemapmain.jsp");
