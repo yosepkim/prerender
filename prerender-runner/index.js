@@ -1,6 +1,9 @@
-const request = require('request');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+import request from 'request';
+import util from 'util';
+import child_process from 'child_process';
+import Crawler from "crawler";
+
+const exec = util.promisify(child_process.exec);
 
 function generateHashKey(stringInput) {
   const stringData = stringInput.replace(/\s/g, "");
@@ -17,14 +20,14 @@ function generateHashKey(stringInput) {
 function getLocation(href) {
   var match = href.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
   return match && {
-      href: href,
-      protocol: match[1],
-      host: match[2],
-      hostname: match[3],
-      port: match[4],
-      pathname: match[5],
-      search: match[6],
-      hash: match[7]
+    href: href,
+    protocol: match[1],
+    host: match[2],
+    hostname: match[3],
+    port: match[4],
+    pathname: match[5],
+    search: match[6],
+    hash: match[7]
   }
 }
 
@@ -49,25 +52,69 @@ function updateHdb(id, content) {
 
 async function prerender(id, targetUrl) {
   const location = getLocation(targetUrl);
-  
-  const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`, {maxBuffer: 1024 * 5000});
+
+  const { stdout, stderr } = await exec(`curl http://localhost:3000/render?url=${targetUrl}`, { maxBuffer: 1024 * 5000 });
   const cleaned = stdout.replaceAll('href=\"/', `href="${location.protocol}//${location.host}/`);
   updateHdb(id, cleaned);
 
   return cleaned;
 }
 
-const targetUrls = [
-  "https://www.kohls.com/product/prd-3671767/mens-under-armour-sportstyle-tee.jsp",
-  "https://www.kohls.com/product/prd-6471433/mens-under-armour-foundation-short-sleeve-tee.jsp",
-  "https://www.kohls.com/product/prd-6458833/mens-under-armour-10-ua-zone-basketball-shorts.jsp",
-  "https://www.brooksrunning.com/en_us",
-  "https://www.brooksrunning.com/en_us/mens/apparel/shorts/",
-  "https://www.brooksrunning.com/en_us/mens/apparel/bottoms/sherpa-7%22-2-in-1-short/211333.html",
-  "https://www.edgecloud9.com"
-];
+// const targetUrls = [
+//   "https://www.kohls.com/product/prd-3671767/mens-under-armour-sportstyle-tee.jsp",
+//   "https://www.kohls.com/product/prd-6471433/mens-under-armour-foundation-short-sleeve-tee.jsp",
+//   "https://www.kohls.com/product/prd-6458833/mens-under-armour-10-ua-zone-basketball-shorts.jsp",
+//   "https://www.brooksrunning.com/en_us",
+//   "https://www.brooksrunning.com/en_us/mens/apparel/shorts/",
+//   "https://www.brooksrunning.com/en_us/mens/apparel/bottoms/sherpa-7%22-2-in-1-short/211333.html",
+//   "https://www.edgecloud9.com"
+// ];
 
-for (const url of targetUrls) {
-  const id = generateHashKey(url);
-  const content = prerender(id, url);
+
+let obselete = [];
+
+let c = new Crawler();
+
+function crawlAllUrls(url) {
+  console.log(`Crawling ${url}`);
+  c.queue({
+      uri: url,
+      callback: function (err, res, done) {
+          if (err) throw err;
+          let $ = res.$;
+          try {
+              let urls = $("a");
+              Object.keys(urls).forEach((item) => {
+                  if (urls[item].type === 'tag') {
+                      let href = urls[item].attribs.href;
+                      if (href && !obselete.includes(href)) {
+                          href = href.trim();
+                          obselete.push(href);
+
+                          const targetUrl = href.split('?')[0];
+                          const id = generateHashKey(targetUrl);
+                          prerender(id, targetUrl);
+
+                          setTimeout(function() {
+                              href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
+                          }, 5000)
+
+                      }
+                  }
+              });
+          } catch (e) {
+              console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
+              done()
+
+          }
+          done();
+      }
+  })
 }
+
+crawlAllUrls("http://www.edgecloud9.com");
+
+// for (const url of targetUrls) {
+//   const id = generateHashKey(url);
+//   const content = prerender(id, url);
+// }
