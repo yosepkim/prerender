@@ -116,4 +116,4 @@ function crawlAllUrls(url) {
   })
 }
 
-crawlAllUrls("https://www.kohls.com/feature/sitemapmain.jsp");
+crawlAllUrls("https://www.kohls.com/catalog/womens-shirts-blouses-tops-clothing.jsp");
