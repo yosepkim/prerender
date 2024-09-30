@@ -96,7 +96,7 @@ function crawlAllUrls(url) {
                           prerender(id, targetUrl);
 
                           setTimeout(function() {
-                              href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
+                              href.startsWith('http') ? crawlAllUrls(href) : crawlAllUrls(`https://${url}${href}`) // The latter might need extra code to test if its the same site and it is a full domain with no URI
                           }, 5000)
 
                       }
