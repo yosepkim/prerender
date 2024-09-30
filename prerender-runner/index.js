@@ -72,7 +72,8 @@ async function prerender(id, targetUrl) {
 
 function isSameHost(originHost, url) {
   const location = getLocation(originHost);
-  if ((location && url.startsWith('http') && url.includes(location.hostname)) || url.startsWith('/')) {
+  const rootDomain = location ? location.hostname.split('.').reverse().splice(0,2).reverse().join('.') : '';
+  if ((location && url.startsWith('http') && url.includes(rootDomain)) || url.startsWith('/')) {
     return true;
   }
   return false;
