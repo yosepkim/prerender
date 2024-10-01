@@ -1,6 +1,7 @@
 import request from 'request';
 import util from 'util';
 import child_process from 'child_process';
+import Crawler from "crawler";
 
 const exec = util.promisify(child_process.exec);
 
@@ -62,8 +63,61 @@ async function prerender(url) {
   return cleaned;
 }
 
+function isSameHost(originHost, url) {
+  const location = getLocation(originHost);
+  const rootDomain = location ? location.hostname.split('.').reverse().splice(0,2).reverse().join('.') : '';
+  if ((location && url.startsWith('http') && url.includes(rootDomain)) || url.startsWith('/')) {
+    return true;
+  }
+  return false;
+}
 
+let obselete = [];
 
-prerender(args[2]);
+let c = new Crawler();
+
+function crawlAllUrls(url) {
+  console.log(`Crawling ${url}`);
+  c.queue({
+      uri: url,
+      callback: function (err, res, done) {
+          if (err) throw err;
+          let $ = res.$;
+          try {
+              let urls = $("a");
+              Object.keys(urls).forEach((item) => {
+                  if (urls[item].type === 'tag') {
+                      let href = urls[item].attribs.href;
+                      if (href && !obselete.includes(href) && isSameHost(url, href)) {
+                          href = href.trim();
+                          obselete.push(href);
+
+                          let targetUrl = href.split('?')[0];
+                          if (targetUrl.startsWith('/')) {
+                            targetUrl = `${url}${targetUrl}`
+                          }
+        
+                          prerender(targetUrl);
+
+                          setTimeout(function() {
+                              crawlAllUrls(targetUrl);
+                          }, 20000)
+
+                      }
+                  }
+              });
+          } catch (e) {
+              console.error(`Encountered an error crawling ${url}. Aborting crawl.`);
+              done()
+
+          }
+          done();
+      }
+  })
+}
+
+const args = process.argv;
+
+crawlAllUrls(args[2]);
 
 //crawlAllUrls("https://www.brooksrunning.com/en_us/sitemap/");

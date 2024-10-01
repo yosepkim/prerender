@@ -1,8 +1,6 @@
 require 'watir'
 require 'headless'
 
-
-
 class Crawler
 
     @@processed = []
@@ -15,6 +13,7 @@ class Crawler
             @@processed.push(target_link)
             browser.links.each do |link|
                 process_link(hostname, link, browser)
+                sleep 10
             end
         end
     end
