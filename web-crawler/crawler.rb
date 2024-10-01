@@ -12,8 +12,8 @@ class Crawler
             sleep 10
             @@processed.push(target_link)
             browser.links.each do |link|
-                puts "processing #{link}"
-                process_link(hostname, link, browser)
+                puts "processing #{link.href}"
+                process_link(hostname, link.href., browser)
             end
         end
     end
