@@ -118,6 +118,6 @@ function crawlAllUrls(url) {
 
 const args = process.argv;
 
-crawlAllUrls(args[1]);
+crawlAllUrls(args[2]);
 
 //crawlAllUrls("https://www.brooksrunning.com/en_us/sitemap/");
