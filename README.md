@@ -14,4 +14,14 @@ $ node prerender-server.js
 To prerender pages in a seperate terminal:
 ```
 $ node index.js
+
 ```
+
+To set up web-crawler
+```
+$ snap install ruby --classic
+$ bundle install
+```
+
+
+https://chromedriver.storage.googleapis.com/LATEST_RELEASE
