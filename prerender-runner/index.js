@@ -116,4 +116,8 @@ function crawlAllUrls(url) {
   })
 }
 
-crawlAllUrls("https://www.brooksrunning.com/en_us/sitemap/");
+const args = process.argv;
+
+crawlAllUrls(args[1]);
+
+//crawlAllUrls("https://www.brooksrunning.com/en_us/sitemap/");
