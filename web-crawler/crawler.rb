@@ -9,7 +9,7 @@ class Crawler
     def process_link(hostname, target_link, browser)
         target_link = target_link.split('#')[0]
         puts "processing #{target_link}"
-        if target_link.kind_of?(String) && !@@processed.include?(target_link) && target_link.start_with?(hostname) && skip?(target_link)
+        if target_link.kind_of?(String) && !@@processed.include?(target_link) && target_link.start_with?(hostname) && !skip?(target_link)
             
             browser.goto(target_link)
 
@@ -27,7 +27,10 @@ class Crawler
     end
 
     def skip?(link)
-        return @@skip.any? { |substring| link.include?(substring) } 
+        @@skip.map do |term|
+            return true if link.include?(term) 
+        end
+        return false 
     end
 
 end
