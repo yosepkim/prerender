@@ -7,7 +7,7 @@ def process_link(target_link, browser)
     browser.goto target_link
     browser.links.each do |link|
         `node ../prerender-runner/index.js #{target_link}`
-        process_link(link)
+        process_link(link, browser)
         sleep 10
     end
 end
