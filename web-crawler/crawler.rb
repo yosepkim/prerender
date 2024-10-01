@@ -10,8 +10,13 @@ class Crawler
         puts "processing #{target_link}"
         if target_link.kind_of?(String) && !@@processed.include?(target_link) && target_link.start_with?(hostname)
             browser.goto(target_link)
-            `node ../prerender-runner/index.js #{target_link} &`
-            sleep 10
+
+            begin
+                `node ../prerender-runner/index.js #{target_link} &`
+                sleep 10
+            rescue => error
+                puts "Error: #{error.message}"
+            end
             @@processed.push(target_link)
             browser.links.each do |link|
                 process_link(hostname, link.href, browser)
