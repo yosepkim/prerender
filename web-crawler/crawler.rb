@@ -10,10 +10,10 @@ class Crawler
     def process_link(hostname, target_link, browser)
         if target_link.kind_of?(String) && !@@processed.include?(target_link) && target_link.start_with?(hostname)
             browser.goto(target_link)
+            `node ../prerender-runner/index.js #{target_link}`
+            sleep 10
             @@processed.push(target_link)
             browser.links.each do |link|
-                `node ../prerender-runner/index.js #{target_link}`
-                sleep 10
                 process_link(hostname, link, browser)
             end
         end
