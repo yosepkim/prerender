@@ -9,10 +9,10 @@ class Crawler
     def process_link(hostname, target_link, browser)
         target_link = target_link.split('#')[0]
         puts "processing #{target_link}"
-        if target_link.kind_of?(String) 
-            && !@@processed.include?(target_link) 
-            && target_link.start_with?(hostname)
-            && @@skip.any? { |substring| target_link.include?(substring) } 
+        if target_link.kind_of?(String) &&
+            !@@processed.include?(target_link) &&
+            target_link.start_with?(hostname) &&
+            @@skip.any? { |substring| target_link.include?(substring) } 
             
             browser.goto(target_link)
 
