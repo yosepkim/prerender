@@ -4,7 +4,7 @@ require 'headless'
 browser = Watir::Browser.new :chrome, headless: true
 
 def process_link(hostname, target_link, browser)
-    if target_link.starts_with?(hostname)
+    if target_link.start_with?(hostname)
         browser.goto target_link
         browser.links.each do |link|
             `node ../prerender-runner/index.js #{target_link}`
