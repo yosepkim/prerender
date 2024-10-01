@@ -62,7 +62,7 @@ async function prerender(url) {
   return cleaned;
 }
 
-
+const args = process.argv;
 
 prerender(args[2]);
 
