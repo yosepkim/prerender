@@ -12,7 +12,7 @@ class Crawler
         if target_link.kind_of?(String) &&
             !@@processed.include?(target_link) &&
             target_link.start_with?(hostname) &&
-            @@skip.any? { |substring| target_link.include?(substring) } 
+            !@@skip.any? { |substring| target_link.include?(substring) } 
             
             browser.goto(target_link)
 
