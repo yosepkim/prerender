@@ -3,7 +3,7 @@ require 'headless'
 
 browser = Watir::Browser.new :chrome, headless: true
 
-def process_link(target_link)
+def process_link(target_link, browser)
     browser.goto target_link
     browser.links.each do |link|
         `node ../prerender-runner/index.js #{target_link}`
@@ -12,4 +12,4 @@ def process_link(target_link)
     end
 end
 
-process_link('https://www.brooksrunning.com/en_us/sitemap/')
+process_link('https://www.brooksrunning.com/en_us/sitemap/', browser)
