@@ -26,5 +26,5 @@ browser = Watir::Browser.new :chrome, headless: true
 crawler = Crawler.new
 
 
-#process_link('https://www.brooksrunning.com', 'https://www.brooksrunning.com/en_us/sitemap/', browser)
-crawler.process_link('https://cars.edgecloud9.com', 'https://cars.edgecloud9.com/', browser)
+crawler.process_link('https://www.brooksrunning.com', 'https://www.brooksrunning.com/en_us/sitemap/', browser)
+#crawler.process_link('https://cars.edgecloud9.com', 'https://cars.edgecloud9.com/', browser)
